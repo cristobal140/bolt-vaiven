@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Sidebar from './components/Sidebar';
 import MobileNav from './components/MobileNav';
+import MobileActionBar from './components/MobileActionBar';
 import WhatsAppFab from './components/WhatsAppFab';
 import HomeView from './views/HomeView';
 import QuienesView from './views/QuienesView';
@@ -65,11 +66,12 @@ export default function App() {
       </div>
 
       <main className="lg:pl-72">
-        <div key={active} className="pt-16 lg:pt-0">
+        <div key={active} className="pt-16 pb-24 lg:pt-0 lg:pb-0">
           {renderView()}
         </div>
       </main>
 
+      <MobileActionBar onNavigate={handleNavigate} />
       <WhatsAppFab />
     </div>
   );

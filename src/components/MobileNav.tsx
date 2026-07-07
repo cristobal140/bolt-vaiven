@@ -1,6 +1,7 @@
 import { Menu } from 'lucide-react';
 import NavList from './NavList';
-import { type ViewId } from '../constants';
+import { type ViewId, WHATSAPP_URL } from '../constants';
+import WhatsAppIcon from './WhatsAppIcon';
 
 interface Props {
   open: boolean;
@@ -44,6 +45,16 @@ export default function MobileNav({ open, onOpen, onClose, active, onNavigate }:
             <p className="text-xs uppercase tracking-mega text-gold mt-1">Food & Drinks</p>
           </div>
           <NavList active={active} onNavigate={onNavigate} variant="drawer" onClose={onClose} />
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onClose}
+            className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-whatsapp px-4 py-3.5 text-sm font-semibold text-white transition-all hover:brightness-110"
+          >
+            <WhatsAppIcon className="h-5 w-5" />
+            Escríbenos por WhatsApp
+          </a>
         </div>
       </aside>
     </>

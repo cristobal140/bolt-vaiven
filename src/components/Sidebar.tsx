@@ -1,6 +1,7 @@
 import NavList from './NavList';
-import { type ViewId, INSTAGRAM_URL } from '../constants';
+import { type ViewId, INSTAGRAM_URL, WHATSAPP_URL } from '../constants';
 import { Instagram } from 'lucide-react';
+import WhatsAppIcon from './WhatsAppIcon';
 
 interface Props {
   active: ViewId;
@@ -29,10 +30,19 @@ export default function Sidebar({ active, onNavigate }: Props) {
       </div>
 
       {/* Footer */}
-      <div className="mt-6 border-t border-white/10 pt-6">
-        <p className="text-[11px] uppercase tracking-widest text-muted mb-3">
+      <div className="mt-6 border-t border-white/10 pt-6 space-y-3">
+        <p className="text-[11px] uppercase tracking-widest text-muted">
           Linares, Maule · Chile
         </p>
+        <a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 text-sm text-muted hover:text-whatsapp transition-colors"
+        >
+          <WhatsAppIcon className="h-4 w-4" />
+          WhatsApp
+        </a>
         <a
           href={INSTAGRAM_URL}
           target="_blank"

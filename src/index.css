@@ -15,6 +15,9 @@
   .text-balance {
     text-wrap: balance;
   }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
   .gold-gradient-text {
     background: linear-gradient(135deg, #E8B85C 0%, #D49A3B 50%, #B07E25 100%);
     -webkit-background-clip: text;

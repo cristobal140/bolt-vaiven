@@ -1,14 +1,25 @@
 import { useState, useEffect } from 'react';
-import { MapPin, Clock, Phone, Instagram, ArrowRight, ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import {
+  MapPin,
+  Phone,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  MessageCircle,
+} from 'lucide-react';
 import { getOpenStatus } from '../utils/hours';
 import {
-  INSTAGRAM_URL,
   ADDRESS,
   PHONE_DISPLAY,
   PHONE,
-  HOURS_TEXT,
   TOTEAT_URL,
+  WHATSAPP_RESERVA_URL,
 } from '../constants';
+import HoursBlock from '../components/HoursBlock';
+import GoogleMapEmbed from '../components/GoogleMapEmbed';
+import ReviewsSection from '../components/ReviewsSection';
+import InstagramFeed from '../components/InstagramFeed';
+import WhatsAppIcon from '../components/WhatsAppIcon';
 
 const GALLERY = [
   'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg?auto=compress&cs=tinysrgb&w=1200',
@@ -16,15 +27,6 @@ const GALLERY = [
   'https://images.pexels.com/photos/2724770/pexels-photo-2724770.jpeg?auto=compress&cs=tinysrgb&w=1200',
   'https://images.pexels.com/photos/1269025/pexels-photo-1269025.jpeg?auto=compress&cs=tinysrgb&w=1200',
   'https://images.pexels.com/photos/331107/pexels-photo-331107.jpeg?auto=compress&cs=tinysrgb&w=1200',
-];
-
-const IG_FEED = [
-  'https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg?auto=compress&cs=tinysrgb&w=400',
-  'https://images.pexels.com/photos/602750/pexels-photo-602750.jpeg?auto=compress&cs=tinysrgb&w=400',
-  'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=400',
-  'https://images.pexels.com/photos/5933/food-salad-healthy-vegetables.jpg?auto=compress&cs=tinysrgb&w=400',
-  'https://images.pexels.com/photos/1283219/pexels-photo-1283219.jpeg?auto=compress&cs=tinysrgb&w=400',
-  'https://images.pexels.com/photos/3011225/pexels-photo-3011225.jpeg?auto=compress&cs=tinysrgb&w=400',
 ];
 
 export default function HomeView() {
@@ -47,41 +49,44 @@ export default function HomeView() {
   return (
     <div className="animate-fade-in">
       {/* Hero */}
-      <section className="relative h-[55vh] min-h-[400px] w-full overflow-hidden">
+      <section className="relative h-[45vh] min-h-[280px] sm:min-h-[360px] sm:h-[50vh] lg:h-[55vh] lg:min-h-[400px] w-full overflow-hidden">
         {GALLERY.map((src, i) => (
           <div
             key={i}
             className="absolute inset-0 transition-opacity duration-1000"
             style={{ opacity: i === slide ? 1 : 0 }}
           >
-            <img src={src} alt="" className="h-full w-full object-cover" />
+            <img
+              src={src}
+              alt={`Ambiente Vaivén Linares ${i + 1}`}
+              className="h-full w-full object-cover"
+            />
           </div>
         ))}
         <div className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/60 to-ink-900/30" />
         <div className="absolute inset-0 bg-gradient-to-r from-ink-900/80 to-transparent" />
 
-        {/* Slider controls */}
         <button
           onClick={prev}
           aria-label="Anterior"
-          className="absolute left-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full glass-dark border border-white/10 text-white/80 hover:text-gold hover:border-gold/40 transition-all"
+          className="absolute left-3 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full glass-dark border border-white/10 text-white/80 hover:text-gold hover:border-gold/40 transition-all sm:left-4"
         >
           <ChevronLeft className="h-5 w-5" strokeWidth={1.5} />
         </button>
         <button
           onClick={next}
           aria-label="Siguiente"
-          className="absolute right-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full glass-dark border border-white/10 text-white/80 hover:text-gold hover:border-gold/40 transition-all"
+          className="absolute right-3 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full glass-dark border border-white/10 text-white/80 hover:text-gold hover:border-gold/40 transition-all sm:right-4"
         >
           <ChevronRight className="h-5 w-5" strokeWidth={1.5} />
         </button>
 
-        {/* Dots */}
-        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
+        <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2 sm:bottom-4">
           {GALLERY.map((_, i) => (
             <button
               key={i}
               onClick={() => setSlide(i)}
+              aria-label={`Ir a imagen ${i + 1}`}
               className={`h-1.5 rounded-full transition-all duration-300 ${
                 i === slide ? 'w-8 bg-gold' : 'w-1.5 bg-white/40'
               }`}
@@ -89,11 +94,10 @@ export default function HomeView() {
           ))}
         </div>
 
-        {/* Hero text */}
-        <div className="absolute bottom-0 left-0 p-8 sm:p-12 lg:p-16 max-w-2xl">
-          <div className="mb-4 flex items-center gap-2">
+        <div className="absolute bottom-0 left-0 p-5 sm:p-8 lg:p-16 max-w-2xl">
+          <div className="mb-3 flex flex-wrap items-center gap-2">
             <span
-              className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-wider transition-all ${
+              className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-wider transition-all sm:px-4 ${
                 status.open
                   ? 'bg-green-500/15 text-green-400 border border-green-500/30'
                   : 'bg-red-500/15 text-red-400 border border-red-500/30'
@@ -103,56 +107,97 @@ export default function HomeView() {
               {status.label}
             </span>
             {status.nextChange && (
-              <span className="text-xs text-muted">{status.nextChange}</span>
+              <span className="text-xs text-white/70">{status.nextChange}</span>
             )}
           </div>
-          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl tracking-wider text-white leading-none">
+          <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl tracking-wider text-white leading-none">
             VAIVÉN
           </h1>
-          <p className="mt-2 text-sm uppercase tracking-mega text-gold font-medium">
+          <p className="mt-1.5 text-xs uppercase tracking-[0.2em] text-gold font-medium sm:tracking-mega">
             Food & Drinks
           </p>
-          <p className="mt-4 max-w-md text-sm text-muted leading-relaxed">
+          <p className="mt-3 max-w-md text-base text-white/80 leading-relaxed sm:mt-4">
             Alta coctelería y gastronomía urbana premium en el corazón de Linares.
           </p>
+
+          {/* Hero CTAs — mobile-first */}
+          <div className="mt-4 flex flex-col gap-2.5 sm:mt-5 sm:flex-row sm:flex-wrap">
+            <a
+              href={WHATSAPP_RESERVA_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-whatsapp px-5 py-3 text-sm font-semibold text-white transition-all hover:brightness-110 active:scale-[0.98]"
+            >
+              <WhatsAppIcon className="h-5 w-5" />
+              Reservar por WhatsApp
+            </a>
+            <a
+              href={TOTEAT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-5 py-3 text-sm font-semibold text-gold transition-all hover:bg-gold hover:text-ink-900"
+            >
+              Ver carta
+              <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
+            </a>
+          </div>
         </div>
       </section>
 
       {/* Quick CTAs */}
-      <section className="px-6 py-10 sm:px-12 lg:px-16">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <section className="px-5 py-8 sm:px-12 lg:px-16 sm:py-10">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
           {[
-            { label: 'Ver Carta', href: TOTEAT_URL },
-            { label: 'Reservas', href: TOTEAT_URL },
-            { label: 'Delivery', href: TOTEAT_URL },
+            { label: 'Ver Carta', href: TOTEAT_URL, external: true },
+            { label: 'Reservas', href: TOTEAT_URL, external: true },
+            {
+              label: 'WhatsApp',
+              href: WHATSAPP_RESERVA_URL,
+              external: true,
+              whatsapp: true,
+            },
           ].map((cta) => (
             <a
               key={cta.label}
               href={cta.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center justify-between rounded-2xl border border-white/10 bg-ink-800 px-6 py-5 transition-all duration-300 hover:border-gold/40 hover:bg-ink-700"
+              className={`group flex items-center justify-between rounded-2xl border px-5 py-4 transition-all duration-300 sm:px-6 sm:py-5 ${
+                cta.whatsapp
+                  ? 'border-whatsapp/30 bg-whatsapp/10 hover:bg-whatsapp hover:border-whatsapp'
+                  : 'border-white/10 bg-ink-800 hover:border-gold/40 hover:bg-ink-700'
+              }`}
             >
-              <span className="font-display text-2xl tracking-wider text-white group-hover:text-gold transition-colors">
+              <span
+                className={`flex items-center gap-2 font-display text-xl tracking-wider transition-colors sm:text-2xl ${
+                  cta.whatsapp
+                    ? 'text-whatsapp group-hover:text-white'
+                    : 'text-white group-hover:text-gold'
+                }`}
+              >
+                {cta.whatsapp && <MessageCircle className="h-5 w-5" strokeWidth={1.5} />}
                 {cta.label}
               </span>
-              <ArrowRight className="h-5 w-5 text-muted group-hover:text-gold group-hover:translate-x-1 transition-all" strokeWidth={1.5} />
+              <ArrowRight
+                className={`h-5 w-5 transition-all group-hover:translate-x-1 ${
+                  cta.whatsapp ? 'text-whatsapp group-hover:text-white' : 'text-muted group-hover:text-gold'
+                }`}
+                strokeWidth={1.5}
+              />
             </a>
           ))}
         </div>
       </section>
 
       {/* Ambiance Gallery */}
-      <section className="px-6 py-10 sm:px-12 lg:px-16">
-        <div className="mb-8 flex items-end justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-mega text-gold mb-2">Ambiente</p>
-            <h2 className="font-display text-3xl sm:text-4xl tracking-wider text-white">
-              Nuestro Espacio
-            </h2>
-          </div>
+      <section className="px-5 py-8 sm:px-12 lg:px-16 sm:py-10">
+        <div className="mb-6 sm:mb-8">
+          <p className="text-xs uppercase tracking-[0.2em] text-gold mb-2 sm:tracking-mega">Ambiente</p>
+          <h2 className="font-display text-3xl sm:text-4xl tracking-wider text-white">
+            Nuestro Espacio
+          </h2>
         </div>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-4">
           {GALLERY.slice(0, 6).map((src, i) => (
             <div
               key={i}
@@ -162,8 +207,9 @@ export default function HomeView() {
             >
               <img
                 src={src}
-                alt=""
+                alt={`Espacio Vaivén ${i + 1}`}
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
@@ -171,82 +217,49 @@ export default function HomeView() {
         </div>
       </section>
 
-      {/* Instagram Hub */}
-      <section className="px-6 py-10 sm:px-12 lg:px-16">
-        <div className="rounded-3xl border border-white/10 bg-ink-800 p-6 sm:p-10">
-          <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-gold to-gold-dark">
-                <Instagram className="h-6 w-6 text-ink-900" strokeWidth={1.5} />
+      {/* Location + Hours */}
+      <section className="px-5 py-8 sm:px-12 lg:px-16 sm:py-10">
+        <div className="mb-6">
+          <p className="text-xs uppercase tracking-[0.2em] text-gold mb-2 sm:tracking-mega">Ubicación</p>
+          <h2 className="font-display text-3xl sm:text-4xl tracking-wider text-white">
+            Encuéntranos
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+          <GoogleMapEmbed height="md" />
+          <div className="rounded-2xl border border-white/10 bg-ink-800 p-6">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold/10">
+                <MapPin className="h-5 w-5 text-gold" strokeWidth={1.5} />
               </div>
-              <div>
-                <p className="text-xs uppercase tracking-mega text-gold">Síguenos</p>
-                <h2 className="font-display text-2xl sm:text-3xl tracking-wider text-white">
-                  @vaivenlinares
-                </h2>
-              </div>
+              <p className="text-base text-white">{ADDRESS}</p>
             </div>
-            <a
-              href={INSTAGRAM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 self-start rounded-full border border-gold/40 bg-gold/10 px-5 py-2.5 text-sm font-medium text-gold transition-all hover:bg-gold hover:text-ink-900"
-            >
-              Ver más en Instagram
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" strokeWidth={1.5} />
-            </a>
-          </div>
-          <div className="grid grid-cols-3 gap-2 sm:gap-3">
-            {IG_FEED.map((src, i) => (
-              <a
-                key={i}
-                href={INSTAGRAM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative aspect-square overflow-hidden rounded-xl"
-              >
-                <img
-                  src={src}
-                  alt=""
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-ink-900/0 group-hover:bg-ink-900/40 transition-colors">
-                  <Instagram className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" strokeWidth={1.5} />
-                </div>
-              </a>
-            ))}
+            <HoursBlock />
           </div>
         </div>
       </section>
 
-      {/* Core Info Bar */}
-      <section className="px-6 py-10 sm:px-12 lg:px-16">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <InfoCard icon={MapPin} title="Dirección" lines={[ADDRESS]} />
-          <InfoCard
-            icon={Clock}
-            title="Horarios"
-            lines={HOURS_TEXT.map((h) => `${h.days}: ${h.hours}`)}
-          />
+      {/* Instagram */}
+      <InstagramFeed />
+
+      {/* Google Reviews */}
+      <ReviewsSection />
+
+      {/* Contact quick info */}
+      <section className="px-5 pb-8 sm:px-12 lg:px-16 sm:pb-16">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <InfoCard
             icon={Phone}
             title="Teléfono"
             lines={[`Fijo: ${PHONE_DISPLAY.fijo}`, `Móvil: ${PHONE_DISPLAY.movil}`]}
             links={[`tel:${PHONE.fijo}`, `tel:${PHONE.movil}`]}
           />
+          <InfoCard
+            icon={MapPin}
+            title="Dirección"
+            lines={[ADDRESS]}
+          />
         </div>
-      </section>
-
-      {/* Testimonial strip */}
-      <section className="px-6 pb-16 sm:px-12 lg:px-16">
-        <div className="flex items-center justify-center gap-1 text-gold">
-          {[...Array(5)].map((_, i) => (
-            <Star key={i} className="h-5 w-5" fill="currentColor" strokeWidth={0} />
-          ))}
-        </div>
-        <p className="mx-auto mt-4 max-w-xl text-center text-sm text-muted leading-relaxed">
-          "Un lugar con un ambiente increíble, tragos de autor y una atención que te hace sentir en casa. El punto de encuentro de Linares."
-        </p>
       </section>
     </div>
   );
@@ -277,12 +290,12 @@ function InfoCard({
             <a
               key={i}
               href={links[i]}
-              className="block text-sm text-white hover:text-gold transition-colors"
+              className="block text-base text-white hover:text-gold transition-colors"
             >
               {line}
             </a>
           ) : (
-            <p key={i} className="text-sm text-white">{line}</p>
+            <p key={i} className="text-base text-white">{line}</p>
           )
         )}
       </div>
